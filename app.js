@@ -15,9 +15,17 @@ const ranks = [
   { name: "מפקד חקירה", level: 5, min: 700 }
 ];
 const voiceFiles = {
-  "משטרה": "assets/audio/mishtara.mp3",
-  "ניידת": "assets/audio/nayadet.mp3",
-  "שוטר": "assets/audio/shoter.mp3"
+  "משטרה": "assets/audio/mishtara.wav",
+  "ניידת": "assets/audio/nayadet.wav",
+  "שוטר": "assets/audio/shoter.wav",
+  "מפה": "assets/audio/mapa.wav",
+  "מפתח": "assets/audio/mafteach.wav",
+  "תיק": "assets/audio/tik.wav"
+};
+const instructionFiles = {
+  "איזו מילה מתאימה לתמונה? בחר את המילה שאתה רואה.": "assets/audio/instruction-read.wav",
+  "כתבו את האות שחסרה במילה.": "assets/audio/instruction-write.wav",
+  "איזה צליל פותח את המילה? בחרו את האות הראשונה.": "assets/audio/instruction-sounds.wav"
 };
 
 function playTone(type) {
@@ -85,25 +93,33 @@ function completeTask(task) {
   });
 }
 function speak(text) {
-  if (!soundOn || !("speechSynthesis" in window)) return;
-  const key = Object.keys(voiceFiles).find((word) => text.includes(word));
-  if (key) {
-    const humanVoice = new Audio(voiceFiles[key]);
-    humanVoice.volume = 0.95;
-    humanVoice.play().catch(() => speakWithSystemVoice(text));
+  if (!soundOn) return;
+  const file = instructionFiles[text] || Object.entries(voiceFiles).find(([word]) => text.trim() === word)?.[1];
+  if (file) {
+    const localAudio = new Audio(file);
+    localAudio.volume = 0.95;
+    localAudio.onerror = () => speakWithSystemVoice(text);
+    localAudio.play().catch(() => speakWithSystemVoice(text));
     return;
   }
   speakWithSystemVoice(text);
 }
 function speakWithSystemVoice(text) {
-  if (!("speechSynthesis" in window)) return;
+  if (!("speechSynthesis" in window)) {
+    showToast("לא נמצא קול במחשב. הוסיפו קול עברי בהגדרות Windows.");
+    return;
+  }
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = "he-IL";
   utterance.rate = 0.82;
   utterance.pitch = 1.05;
+  const voices = window.speechSynthesis.getVoices();
+  const hebrewVoice = voices.find((voice) => voice.lang.toLowerCase().startsWith("he"));
+  if (hebrewVoice) utterance.voice = hebrewVoice;
   window.speechSynthesis.speak(utterance);
 }
+if ("speechSynthesis" in window) window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
 function showManagerFeedback(message, nextAction) {
   const modal = document.getElementById("missionComplete");
   document.getElementById("managerTitle").textContent = childName ? `כל הכבוד, ${childName}!` : "כל הכבוד!";
