@@ -1,6 +1,6 @@
 {
   "name": "police-reader",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "תחנת למידה משחקית לקריאה וכתיבה",
   "main": "main.js",
   "scripts": {
@@ -28,7 +28,7 @@
       ]
     },
     "nsis": {
-      "artifactName": "${productName}-Setup-${version}-${arch}.${ext}",
+      "artifactName": "PoliceReader-Setup-${version}-${arch}.${ext}",
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
@@ -37,7 +37,7 @@
       "menuCategory": "לימודים"
     },
     "portable": {
-      "artifactName": "${productName}-Portable-${version}-${arch}.${ext}"
+      "artifactName": "PoliceReader-Portable-${version}-${arch}.${ext}"
     }
   }
 }
