@@ -65,6 +65,18 @@ function speakWithSystemVoice(text) {
   utterance.pitch = 1.05;
   window.speechSynthesis.speak(utterance);
 }
+function showManagerFeedback(message, nextAction) {
+  const modal = document.getElementById("missionComplete");
+  document.getElementById("managerTitle").textContent = childName ? `כל הכבוד, ${childName}!` : "כל הכבוד!";
+  document.getElementById("managerMessage").textContent = message;
+  modal.classList.remove("hidden");
+  playTone("success");
+  speak(`כל הכבוד ${childName || ""}. ${message}`);
+  window.setTimeout(() => {
+    modal.classList.add("hidden");
+    nextAction();
+  }, 2000);
+}
 function applyChildName(name) {
   childName = name.trim();
   localStorage.setItem("policeReaderChildName", childName);
@@ -148,7 +160,14 @@ function renderReadRound() {
         addPoints(40);
         playTone("success");
         speak(`מצוין! ${round.word}`);
-        document.getElementById("nextRead").classList.remove("hidden");
+        window.setTimeout(() => showManagerFeedback(`סיימת את סבב הקריאה: ${round.word}.`, () => {
+          if (readRound < readRounds.length - 1) {
+            readRound += 1;
+            renderReadRound();
+          } else {
+            goTo("write");
+          }
+        }), 150);
       } else {
         button.classList.add("wrong");
         feedback.className = "feedback bad";
@@ -164,52 +183,103 @@ function renderReadRound() {
 renderReadRound();
 document.getElementById("listenButton").addEventListener("click", () => { soundOn = true; localStorage.setItem("policeReaderSound", "on"); document.getElementById("soundButton").setAttribute("aria-pressed", "true"); document.getElementById("soundButton").textContent = "◉"; speak("משטרה"); playTone("click"); document.getElementById("toast").textContent = "הקשיבו למילה: משטרה"; document.getElementById("toast").classList.add("show"); setTimeout(() => document.getElementById("toast").classList.remove("show"), 1800); });
 document.getElementById("hintButton").addEventListener("click", () => { document.getElementById("hintText").textContent = readRounds[readRound].hint; playTone("click"); speak(readRounds[readRound].hint); });
-document.getElementById("nextRead").addEventListener("click", () => {
-  if (readRound < readRounds.length - 1) {
-    readRound += 1;
-    renderReadRound();
-  } else {
-    readCompleted = true;
-    document.getElementById("readFeedback").className = "feedback good";
-    document.getElementById("readFeedback").textContent = "כל שלושת הסבבים הושלמו. חקירה מצוינת!";
-    document.getElementById("nextRead").textContent = "המשך לחדר הכתיבה ←";
-    document.getElementById("nextRead").onclick = () => goTo("write");
-  }
-});
+const writeRounds = [
+  { word: "משטרה", missing: "ש", parts: ["מ", "_", "ט", "ר", "ה"], image: "🚓" },
+  { word: "ניידת", missing: "י", parts: ["נ", "_", "ד", "ת"], image: "🚔" },
+  { word: "שוטר", missing: "ו", parts: ["ש", "_", "ט", "ר"], image: "👮" }
+];
+let writeRound = 0;
+function renderWriteRound() {
+  const round = writeRounds[writeRound];
+  document.getElementById("writeRoundLabel").textContent = `כותבים דו״ח · סבב ${writeRound + 1} מתוך ${writeRounds.length}`;
+  document.getElementById("writeWordLabel").textContent = round.word;
+  document.querySelector(".prompt-image").textContent = round.image;
+  document.getElementById("missingWord").replaceChildren(...round.parts.map((part) => {
+    const span = document.createElement("span");
+    span.className = part === "_" ? "blank" : "";
+    span.textContent = part;
+    return span;
+  }));
+  document.getElementById("letterInput").value = "";
+  document.getElementById("letterInput").disabled = false;
+  document.getElementById("checkLetter").disabled = false;
+  document.getElementById("writeFeedback").textContent = "";
+  document.getElementById("writeFeedback").className = "feedback";
+}
+renderWriteRound();
 document.getElementById("checkLetter").addEventListener("click", () => {
   const input = document.getElementById("letterInput");
   const feedback = document.getElementById("writeFeedback");
-  if (input.value.trim() === "ש") { document.getElementById("blank").textContent = "ש"; feedback.className = "feedback good"; feedback.textContent = "נכון מאוד! כתבתם את המילה משטרה."; writeScore = 40; document.getElementById("writeScore").textContent = writeScore; addPoints(40); input.disabled = true; document.getElementById("checkLetter").disabled = true; playTone("success"); speak("נכון מאוד"); }
-  else { feedback.className = "feedback bad"; feedback.textContent = "נסו שוב. האות היא ש."; playTone("error"); input.focus(); }
+  const round = writeRounds[writeRound];
+  if (input.value.trim() === round.missing) {
+    document.querySelector("#missingWord .blank").textContent = round.missing;
+    feedback.className = "feedback good";
+    feedback.textContent = `נכון מאוד! כתבתם את המילה ${round.word}.`;
+    writeScore += 40;
+    document.getElementById("writeScore").textContent = writeScore;
+    addPoints(40);
+    input.disabled = true;
+    document.getElementById("checkLetter").disabled = true;
+    showManagerFeedback(`השלמת את המילה ${round.word}.`, () => {
+      if (writeRound < writeRounds.length - 1) {
+        writeRound += 1;
+        renderWriteRound();
+      } else {
+        goTo("sounds");
+      }
+    });
+  }
+  else { feedback.className = "feedback bad"; feedback.textContent = `נסו שוב. האות היא ${round.missing}.`; playTone("error"); input.focus(); }
 });
 document.getElementById("letterInput").addEventListener("keydown", (event) => { if (event.key === "Enter") document.getElementById("checkLetter").click(); });
+const soundRounds = [
+  { word: "שוטר", answer: "ש", choices: ["מ", "ש", "ת"] },
+  { word: "ניידת", answer: "נ", choices: ["נ", "ב", "ל"] },
+  { word: "מפה", answer: "מ", choices: ["ס", "מ", "ש"] }
+];
+let soundRound = 0;
 const soundChoices = document.getElementById("soundChoices");
-["מ", "ש", "ת"].forEach((letter) => {
+function renderSoundRound() {
+  const round = soundRounds[soundRound];
+  document.getElementById("soundWord").textContent = round.word;
+  document.getElementById("soundRoundLabel").textContent = `מעבדת צלילים · סבב ${soundRound + 1} מתוך ${soundRounds.length}`;
+  document.getElementById("soundFeedback").textContent = "";
+  document.getElementById("soundFeedback").className = "feedback";
+  soundChoices.replaceChildren();
+  round.choices.forEach((letter) => {
   const button = document.createElement("button");
   button.className = "sound-choice";
   button.textContent = letter;
   button.addEventListener("click", () => {
     const feedback = document.getElementById("soundFeedback");
     document.querySelectorAll(".sound-choice").forEach((item) => { item.disabled = true; });
-    if (letter === "ש") {
+    if (letter === round.answer) {
       button.classList.add("correct");
       feedback.className = "feedback good";
-      feedback.textContent = "נכון! שׁוֹטֵר מתחילה בצליל שׁ.";
+      feedback.textContent = `נכון! ${round.word} מתחילה בצליל ${round.answer}.`;
       addPoints(30);
-      playTone("success");
-      speak("נכון. שוטר מתחילה בצליל שין");
+      showManagerFeedback(`זיהית נכון את הצליל הראשון במילה ${round.word}.`, () => {
+        if (soundRound < soundRounds.length - 1) {
+          soundRound += 1;
+          renderSoundRound();
+        } else {
+          goTo("reports");
+        }
+      });
     } else {
       button.classList.add("wrong");
       feedback.className = "feedback bad";
-      feedback.textContent = "כמעט. הקשיבו שוב: שׁוֹטֵר.";
+      feedback.textContent = `כמעט. הקשיבו שוב: ${round.word}.`;
       document.querySelectorAll(".sound-choice").forEach((item) => { if (item !== button) item.disabled = false; });
       playTone("error");
-      speak("כמעט. שוטר");
+      speak(`כמעט. ${round.word}`);
     }
   });
   soundChoices.appendChild(button);
 });
-document.getElementById("soundWordButton").addEventListener("click", () => { soundOn = true; localStorage.setItem("policeReaderSound", "on"); speak("שוטר"); playTone("click"); });
+}
+renderSoundRound();
+document.getElementById("soundWordButton").addEventListener("click", () => { soundOn = true; localStorage.setItem("policeReaderSound", "on"); speak(document.getElementById("soundWord").textContent); playTone("click"); });
 document.getElementById("points").textContent = points;
 document.getElementById("reportPoints").textContent = points;
 document.getElementById("soundButton").setAttribute("aria-pressed", String(soundOn));

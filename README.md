@@ -37,6 +37,8 @@ git push -u origin main
 - משוב קולי: צלילי לחיצה, הצלחה וניסיון נוסף, בנוסף להקראת מילים בעברית.
 - מסך פתיחה ששואל את שם הילד ושומר אותו מקומית, עם פנייה אישית בכל מסך.
 - תמיכה בקבצי קול אנושיים מקומיים לתרגילי המילים, עם fallback לקול עברי מותקן.
+- מסלול ארוך של תשעה אתגרים: 3 קריאה, 3 כתיבה ו־3 זיהוי צלילים, עם מעבר אוטומטי בין משימות.
+- תדריך מונפש מקומי של “מנהל התחנה” בסיום כל אתגר, כדי לתת חיזוק ברור לפני המעבר הבא.
 - ממשק RTL בעברית, טקסט גדול וניגודיות ברורה.
 
 האב־טיפוס אינו תחליף לתוכנית טיפול או הוראה מקצועית. לפני שימוש קבוע מומלץ להתאים את רמת הקושי והתרגילים יחד עם קלינאי תקשורת או מורה לחינוך מיוחד.
@@ -51,6 +53,8 @@ git push -u origin main
 - [National Center on Improving Literacy — Phonics](https://improvingliteracy.org/resource/phonics-what-is-it-and-why-is-it-important/)
 - [NCII — Opportunities to Respond](https://intensiveintervention.org/resource/intensifying-intervention-opportunities-to-respond)
 - [ASHA — Augmentative and Alternative Communication](https://www.asha.org/practice-portal/professional-issues/augmentative-and-alternative-communication/)
+
+תדריכי הווידאו נשמרים מקומית; ראו `assets/video/README.md` להנחיות להוספת קטעים חינמיים עם רישיון מתאים או הקלטות מקוריות.
 
 ## קול אנושי והגנת פרטיות
 
