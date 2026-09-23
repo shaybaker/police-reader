@@ -1,6 +1,6 @@
 {
   "name": "police-reader",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "תחנת למידה משחקית לקריאה וכתיבה",
   "main": "main.js",
   "scripts": {
@@ -18,7 +18,8 @@
       "main.js",
       "index.html",
       "styles.css",
-      "app.js"
+      "app.js",
+      "assets/**/*"
     ],
     "win": {
       "target": "nsis"

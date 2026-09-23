@@ -1,10 +1,16 @@
 const screens = { home: document.getElementById("homeScreen"), read: document.getElementById("readScreen"), write: document.getElementById("writeScreen"), sounds: document.getElementById("soundsScreen"), reports: document.getElementById("reportsScreen") };
 const titleMap = { home: "משימות היום", read: "אימון קריאה", write: "חדר כתיבה", sounds: "מעבדת צלילים", reports: "דוחות הצלחה" };
 let points = Number(localStorage.getItem("policeReaderPoints") || 120);
+let childName = localStorage.getItem("policeReaderChildName") || "";
 let readScore = 0;
 let writeScore = 0;
 let soundOn = localStorage.getItem("policeReaderSound") === "on";
 let audioContext;
+const voiceFiles = {
+  "משטרה": "assets/audio/mishtara.mp3",
+  "ניידת": "assets/audio/nayadet.mp3",
+  "שוטר": "assets/audio/shoter.mp3"
+};
 
 function playTone(type) {
   if (!soundOn) return;
@@ -41,12 +47,54 @@ function addPoints(amount) {
 }
 function speak(text) {
   if (!soundOn || !("speechSynthesis" in window)) return;
+  const key = Object.keys(voiceFiles).find((word) => text.includes(word));
+  if (key) {
+    const humanVoice = new Audio(voiceFiles[key]);
+    humanVoice.volume = 0.95;
+    humanVoice.play().catch(() => speakWithSystemVoice(text));
+    return;
+  }
+  speakWithSystemVoice(text);
+}
+function speakWithSystemVoice(text) {
+  if (!("speechSynthesis" in window)) return;
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = "he-IL";
   utterance.rate = 0.82;
   utterance.pitch = 1.05;
   window.speechSynthesis.speak(utterance);
+}
+function applyChildName(name) {
+  childName = name.trim();
+  localStorage.setItem("policeReaderChildName", childName);
+  const firstLetter = Array.from(childName)[0] || "?";
+  document.getElementById("welcomeName").textContent = childName;
+  document.getElementById("reportName").textContent = childName;
+  document.getElementById("officerName").textContent = `החוקר ${childName}`;
+  document.getElementById("avatarLetter").textContent = firstLetter;
+}
+function openNamePrompt() {
+  const modal = document.getElementById("welcomeModal");
+  modal.classList.remove("hidden");
+  document.getElementById("childName").focus();
+}
+document.getElementById("nameForm").addEventListener("submit", (event) => {
+  event.preventDefault();
+  const input = document.getElementById("childName");
+  if (!input.value.trim()) return;
+  applyChildName(input.value);
+  document.getElementById("welcomeModal").classList.add("hidden");
+  document.querySelector(".app-shell").removeAttribute("aria-hidden");
+  soundOn = true;
+  localStorage.setItem("policeReaderSound", "on");
+  speak(`שלום ${childName}. ברוך הבא לתחנת הקריאה`);
+});
+if (childName) {
+  applyChildName(childName);
+  document.getElementById("welcomeModal").classList.add("hidden");
+} else {
+  document.querySelector(".app-shell").setAttribute("aria-hidden", "true");
 }
 document.querySelectorAll("[data-go]").forEach((button) => button.addEventListener("click", () => goTo(button.dataset.go)));
 document.querySelectorAll(".nav-item").forEach((button) => button.addEventListener("click", () => goTo(button.dataset.screen)));

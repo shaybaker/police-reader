@@ -35,6 +35,8 @@ git push -u origin main
 - דוח הצלחה עם היסטוריית משימות.
 - הקראת מילים, מצב עזרה, שמירת ניקוד מקומית ותמיכה במקלדת.
 - משוב קולי: צלילי לחיצה, הצלחה וניסיון נוסף, בנוסף להקראת מילים בעברית.
+- מסך פתיחה ששואל את שם הילד ושומר אותו מקומית, עם פנייה אישית בכל מסך.
+- תמיכה בקבצי קול אנושיים מקומיים לתרגילי המילים, עם fallback לקול עברי מותקן.
 - ממשק RTL בעברית, טקסט גדול וניגודיות ברורה.
 
 האב־טיפוס אינו תחליף לתוכנית טיפול או הוראה מקצועית. לפני שימוש קבוע מומלץ להתאים את רמת הקושי והתרגילים יחד עם קלינאי תקשורת או מורה לחינוך מיוחד.
@@ -49,3 +51,7 @@ git push -u origin main
 - [National Center on Improving Literacy — Phonics](https://improvingliteracy.org/resource/phonics-what-is-it-and-why-is-it-important/)
 - [NCII — Opportunities to Respond](https://intensiveintervention.org/resource/intensifying-intervention-opportunities-to-respond)
 - [ASHA — Augmentative and Alternative Communication](https://www.asha.org/practice-portal/professional-issues/augmentative-and-alternative-communication/)
+
+## קול אנושי והגנת פרטיות
+
+שם הילד נשמר רק במחשב המקומי באמצעות `localStorage`, ואינו נשלח לאינטרנט. ניתן להוסיף הקלטות של מורה או בן משפחה לפי ההנחיות ב־`assets/audio/README.md`; המשחק ינגן אותן ללא שירות ענן. אם הקלטה חסרה, הוא ישתמש בקול העברי שמותקן ב־Windows.

@@ -7,6 +7,20 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+    <div class="welcome-modal" id="welcomeModal" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
+      <div class="welcome-modal-card">
+        <div class="badge-mark large" aria-hidden="true">★</div>
+        <p class="eyebrow">תחנת קריאה משטרתית</p>
+        <h2 id="welcomeTitle">איך קוראים לך?</h2>
+        <p>נכיר אותך לפני שמתחילים את המשימה.</p>
+        <form id="nameForm">
+          <label for="childName">השם שלך</label>
+          <input id="childName" name="childName" maxlength="24" autocomplete="given-name" required autofocus />
+          <button class="primary-button" type="submit">כניסה לתחנה <span aria-hidden="true">←</span></button>
+        </form>
+        <small>אפשר לשנות את השם אחר כך בעזרת מבוגר.</small>
+      </div>
+    </div>
     <a class="skip-link" href="#main">דלג לתוכן הראשי</a>
     <div class="app-shell">
       <aside class="sidebar" aria-label="ניווט ראשי">
@@ -18,8 +32,8 @@
           </div>
         </div>
         <div class="officer-card">
-          <div class="avatar" aria-hidden="true">א</div>
-          <div><strong>החוקר אורי</strong><small>דרגת מתלמד</small></div>
+          <div class="avatar" id="avatarLetter" aria-hidden="true">?</div>
+          <div><strong id="officerName">החוקר</strong><small>דרגת מתלמד</small></div>
           <span class="online-dot" aria-label="מחובר"></span>
         </div>
         <nav>
@@ -57,7 +71,7 @@
 
         <section id="homeScreen" class="screen">
           <section class="welcome-banner">
-            <div class="welcome-copy"><span class="case-tag">תיק מס׳ 0042 · פתוח</span><h2>בוקר טוב, אורי.<br /><em>המשימה שלך מחכה.</em></h2><p>שלוש משימות קצרות יעזרו לך להתקדם היום.</p><button class="primary-button" data-go="read">פתיחת המשימה הראשונה <span aria-hidden="true">←</span></button></div>
+            <div class="welcome-copy"><span class="case-tag">תיק מס׳ 0042 · פתוח</span><h2>בוקר טוב, <span id="welcomeName">חוקר</span>.<br /><em>המשימה שלך מחכה.</em></h2><p>שלוש משימות קצרות יעזרו לך להתקדם היום.</p><button class="primary-button" data-go="read">פתיחת המשימה הראשונה <span aria-hidden="true">←</span></button></div>
             <div class="radar" aria-hidden="true"><div class="radar-ring ring-1"></div><div class="radar-ring ring-2"></div><div class="radar-line"></div><div class="radar-dot dot-1"></div><div class="radar-dot dot-2"></div><div class="radar-center">★</div></div>
           </section>
 
@@ -86,7 +100,7 @@
         </section>
 
         <section id="reportsScreen" class="screen hidden">
-          <div class="reports-hero"><div><p class="eyebrow">דוחות הצלחה</p><h2>כל הכבוד, אורי.</h2><p>כל תרגול קטן הוא צעד גדול קדימה.</p></div><div class="big-medal" aria-hidden="true">★</div></div>
+          <div class="reports-hero"><div><p class="eyebrow">דוחות הצלחה</p><h2>כל הכבוד, <span id="reportName">חוקר</span>.</h2><p>כל תרגול קטן הוא צעד גדול קדימה.</p></div><div class="big-medal" aria-hidden="true">★</div></div>
           <div class="report-stats"><div><strong id="reportPoints">120</strong><span>נקודות שנצברו</span></div><div><strong>6</strong><span>מילים שנלמדו</span></div><div><strong>3</strong><span>ימים ברצף</span></div></div>
           <div class="report-list"><div class="section-heading"><div><p class="eyebrow">יומן משימות</p><h2>ההצלחות האחרונות</h2></div></div><div class="report-row"><span class="report-check">✓</span><div><strong>כותבים דו״ח</strong><small>הושלם היום · 40 נקודות</small></div><span class="report-date">היום</span></div><div class="report-row"><span class="report-check">✓</span><div><strong>אותיות ראשונות</strong><small>הושלם אתמול · 30 נקודות</small></div><span class="report-date">אתמול</span></div></div>
         </section>
