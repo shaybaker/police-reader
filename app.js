@@ -6,6 +6,14 @@ let readScore = 0;
 let writeScore = 0;
 let soundOn = localStorage.getItem("policeReaderSound") === "on";
 let audioContext;
+const completedTasks = new Set(JSON.parse(sessionStorage.getItem("policeReaderCompleted") || "[]"));
+const ranks = [
+  { name: "מתלמד", level: 1, min: 0 },
+  { name: "בלש מתחיל", level: 2, min: 160 },
+  { name: "בלש זוטר", level: 3, min: 320 },
+  { name: "בלש מתקדם", level: 4, min: 500 },
+  { name: "מפקד חקירה", level: 5, min: 700 }
+];
 const voiceFiles = {
   "משטרה": "assets/audio/mishtara.mp3",
   "ניידת": "assets/audio/nayadet.mp3",
@@ -30,6 +38,11 @@ function playTone(type) {
 }
 
 function goTo(screenName) {
+  const taskForScreen = { read: "read", write: "write", sounds: "sounds" }[screenName];
+  if (taskForScreen && completedTasks.has(taskForScreen)) {
+    showToast("המשימה הזו כבר הושלמה בסשן הנוכחי. פתחו משחק חדש למשימות חדשות.");
+    return;
+  }
   Object.entries(screens).forEach(([name, element]) => element.classList.toggle("hidden", name !== screenName));
   document.getElementById("pageTitle").textContent = titleMap[screenName];
   document.querySelectorAll(".nav-item").forEach((button) => {
@@ -44,6 +57,32 @@ function addPoints(amount) {
   localStorage.setItem("policeReaderPoints", String(points));
   document.getElementById("points").textContent = points;
   document.getElementById("reportPoints").textContent = points;
+  updateRank();
+}
+function updateRank() {
+  const rank = [...ranks].reverse().find((item) => points >= item.min) || ranks[0];
+  const next = ranks.find((item) => item.min > points);
+  document.getElementById("rankName").textContent = rank.name;
+  document.getElementById("homeRank").textContent = rank.name;
+  document.getElementById("rankLevel").textContent = `דרגה ${rank.level}`;
+  document.getElementById("rankNext").textContent = next ? `עוד ${next.min - points} נקודות עד לדרגה הבאה.` : "הגעת לדרגת מפקד חקירה!";
+  const progress = next ? Math.round(((points - rank.min) / (next.min - rank.min)) * 100) : 100;
+  document.getElementById("progressFill").style.width = `${progress}%`;
+  document.getElementById("progressValue").textContent = `${progress}%`;
+}
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.classList.add("show");
+  setTimeout(() => toast.classList.remove("show"), 2600);
+}
+function completeTask(task) {
+  completedTasks.add(task);
+  sessionStorage.setItem("policeReaderCompleted", JSON.stringify([...completedTasks]));
+  document.querySelectorAll(`[data-screen="${task}"]`).forEach((button) => {
+    button.classList.add("completed");
+    button.setAttribute("aria-disabled", "true");
+  });
 }
 function speak(text) {
   if (!soundOn || !("speechSynthesis" in window)) return;
@@ -121,15 +160,19 @@ document.getElementById("soundButton").addEventListener("click", (event) => {
   setTimeout(() => document.getElementById("toast").classList.remove("show"), 1800);
 });
 document.getElementById("helpButton").addEventListener("click", () => {
-  const toast = document.getElementById("toast");
-  toast.textContent = "אפשר לבקש עזרה ממבוגר בכל שלב.";
-  toast.classList.add("show");
-  setTimeout(() => toast.classList.remove("show"), 2600);
+  showToast("אפשר לבקש עזרה ממבוגר בכל שלב.");
 });
+document.querySelectorAll("[data-speak]").forEach((button) => button.addEventListener("click", () => {
+  soundOn = true;
+  localStorage.setItem("policeReaderSound", "on");
+  speak(button.dataset.speak);
+}));
 const readRounds = [
-  { word: "משטרה", image: "מכונית משטרה", choices: ["משטרה", "מכונה", "מטריה"], hint: "המילה מתחילה באות מ." },
-  { word: "ניידת", image: "ניידת משטרה", choices: ["נדנדה", "ניידת", "נמלה"], hint: "המילה מתחילה בצליל נַי." },
-  { word: "שוטר", image: "שוטר", choices: ["שולחן", "שוטר", "שמש"], hint: "המילה מתחילה באות ש." }
+  { word: "משטרה", image: "מכונית משטרה", imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Police%20car.jpg?width=900", choices: ["משטרה", "מכונה", "מטריה"], hint: "המילה מתחילה באות מ." },
+  { word: "ניידת", image: "ניידת משטרה", imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Police%20car%20in%20New%20York%20City.jpg?width=900", choices: ["נדנדה", "ניידת", "נמלה"], hint: "המילה מתחילה בצליל נַי." },
+  { word: "שוטר", image: "שוטר", imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Police%20officer.jpg?width=900", choices: ["שולחן", "שוטר", "שמש"], hint: "המילה מתחילה באות ש." },
+  { word: "מפה", image: "מפת חקירה", imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Map.jpg?width=900", choices: ["מפה", "מיטה", "מגבת"], hint: "המילה מתחילה באות מ." },
+  { word: "מפתח", image: "מפתח", imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Key.jpg?width=900", choices: ["מפתח", "מטוס", "מחשב"], hint: "המילה מתחילה בצליל מַפ." }
 ];
 let readRound = 0;
 let readCompleted = false;
@@ -138,6 +181,11 @@ function renderReadRound() {
   const round = readRounds[readRound];
   document.getElementById("readRoundLabel").textContent = `קוראים את הזירה · סבב ${readRound + 1} מתוך ${readRounds.length}`;
   document.querySelector(".scene-illustration").setAttribute("aria-label", round.image);
+  const sceneImage = document.getElementById("sceneImage");
+  sceneImage.src = round.imageUrl;
+  sceneImage.alt = round.image;
+  sceneImage.onerror = () => { sceneImage.classList.add("hidden"); };
+  sceneImage.onload = () => sceneImage.classList.remove("hidden");
   document.getElementById("hintText").textContent = "";
   document.getElementById("readFeedback").textContent = "";
   document.getElementById("readFeedback").className = "feedback";
@@ -165,6 +213,7 @@ function renderReadRound() {
             readRound += 1;
             renderReadRound();
           } else {
+            completeTask("read");
             goTo("write");
           }
         }), 150);
@@ -183,17 +232,25 @@ function renderReadRound() {
 renderReadRound();
 document.getElementById("listenButton").addEventListener("click", () => { soundOn = true; localStorage.setItem("policeReaderSound", "on"); document.getElementById("soundButton").setAttribute("aria-pressed", "true"); document.getElementById("soundButton").textContent = "◉"; speak("משטרה"); playTone("click"); document.getElementById("toast").textContent = "הקשיבו למילה: משטרה"; document.getElementById("toast").classList.add("show"); setTimeout(() => document.getElementById("toast").classList.remove("show"), 1800); });
 document.getElementById("hintButton").addEventListener("click", () => { document.getElementById("hintText").textContent = readRounds[readRound].hint; playTone("click"); speak(readRounds[readRound].hint); });
+document.getElementById("speakChoices").addEventListener("click", () => speak(readRounds[readRound].choices.join(". ")));
 const writeRounds = [
-  { word: "משטרה", missing: "ש", parts: ["מ", "_", "ט", "ר", "ה"], image: "🚓" },
-  { word: "ניידת", missing: "י", parts: ["נ", "_", "ד", "ת"], image: "🚔" },
-  { word: "שוטר", missing: "ו", parts: ["ש", "_", "ט", "ר"], image: "👮" }
+  { word: "משטרה", missing: "ש", parts: ["מ", "_", "ט", "ר", "ה"], imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Police%20car.jpg?width=500" },
+  { word: "ניידת", missing: "י", parts: ["נ", "_", "ד", "ת"], imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Police%20car%20in%20New%20York%20City.jpg?width=500" },
+  { word: "שוטר", missing: "ו", parts: ["ש", "_", "ט", "ר"], imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Police%20officer.jpg?width=500" },
+  { word: "מפה", missing: "פ", parts: ["מ", "_", "ה"], imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Map.jpg?width=500" },
+  { word: "מפתח", missing: "פ", parts: ["מ", "_", "ת", "ח"], imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Key.jpg?width=500" }
 ];
 let writeRound = 0;
 function renderWriteRound() {
   const round = writeRounds[writeRound];
   document.getElementById("writeRoundLabel").textContent = `כותבים דו״ח · סבב ${writeRound + 1} מתוך ${writeRounds.length}`;
   document.getElementById("writeWordLabel").textContent = round.word;
-  document.querySelector(".prompt-image").textContent = round.image;
+  document.getElementById("speakWriteWord").setAttribute("aria-label", `השמע את המילה ${round.word}`);
+  const writeImage = document.getElementById("writeImage");
+  writeImage.src = round.imageUrl;
+  writeImage.alt = round.word;
+  writeImage.onerror = () => writeImage.classList.add("hidden");
+  writeImage.onload = () => writeImage.classList.remove("hidden");
   document.getElementById("missingWord").replaceChildren(...round.parts.map((part) => {
     const span = document.createElement("span");
     span.className = part === "_" ? "blank" : "";
@@ -225,6 +282,7 @@ document.getElementById("checkLetter").addEventListener("click", () => {
         writeRound += 1;
         renderWriteRound();
       } else {
+        completeTask("write");
         goTo("sounds");
       }
     });
@@ -232,10 +290,13 @@ document.getElementById("checkLetter").addEventListener("click", () => {
   else { feedback.className = "feedback bad"; feedback.textContent = `נסו שוב. האות היא ${round.missing}.`; playTone("error"); input.focus(); }
 });
 document.getElementById("letterInput").addEventListener("keydown", (event) => { if (event.key === "Enter") document.getElementById("checkLetter").click(); });
+document.getElementById("speakWriteWord").addEventListener("click", () => speak(writeRounds[writeRound].word));
 const soundRounds = [
   { word: "שוטר", answer: "ש", choices: ["מ", "ש", "ת"] },
   { word: "ניידת", answer: "נ", choices: ["נ", "ב", "ל"] },
-  { word: "מפה", answer: "מ", choices: ["ס", "מ", "ש"] }
+  { word: "מפה", answer: "מ", choices: ["ס", "מ", "ש"] },
+  { word: "מפתח", answer: "מ", choices: ["מ", "פ", "ש"] },
+  { word: "תיק", answer: "ת", choices: ["ת", "ט", "ק"] }
 ];
 let soundRound = 0;
 const soundChoices = document.getElementById("soundChoices");
@@ -263,6 +324,7 @@ function renderSoundRound() {
           soundRound += 1;
           renderSoundRound();
         } else {
+          completeTask("sounds");
           goTo("reports");
         }
       });
@@ -282,5 +344,10 @@ renderSoundRound();
 document.getElementById("soundWordButton").addEventListener("click", () => { soundOn = true; localStorage.setItem("policeReaderSound", "on"); speak(document.getElementById("soundWord").textContent); playTone("click"); });
 document.getElementById("points").textContent = points;
 document.getElementById("reportPoints").textContent = points;
+updateRank();
+completedTasks.forEach((task) => document.querySelectorAll(`[data-screen="${task}"]`).forEach((button) => {
+  button.classList.add("completed");
+  button.setAttribute("aria-disabled", "true");
+}));
 document.getElementById("soundButton").setAttribute("aria-pressed", String(soundOn));
 document.getElementById("soundButton").textContent = soundOn ? "◉" : "◖";
