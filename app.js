@@ -30,6 +30,17 @@ const instructionFiles = {
   "כתבו את האות שחסרה במילה.": "assets/audio/instruction-write.wav",
   "איזה צליל פותח את המילה? בחרו את האות הראשונה.": "assets/audio/instruction-sounds.wav"
 };
+const pronunciation = new Map([
+  ["משטרה", "מִשְׁטָרָה"], ["ניידת", "נַיֶּדֶת"], ["שוטר", "שׁוֹטֵר"],
+  ["מפה", "מַפָּה"], ["מפתח", "מַפְתֵּחַ"], ["תיק", "תִּיק"],
+  ["תג", "תָּג"], ["דלת", "דֶּלֶת"], ["אור", "אוֹר"],
+  ["מצוין", "מְצוּיָן"], ["כמעט", "כִּמְעַט"], ["נכון", "נָכוֹן"],
+  ["האות", "הָאוֹת"], ["המילה", "הַמִּלָּה"], ["הראשונה", "הָרִאשׁוֹנָה"],
+  ["כל הכבוד", "כָּל הַכָּבוֹד"], ["שלום", "שָׁלוֹם"], ["ברוך הבא", "בָּרוּךְ הַבָּא"]
+]);
+function addPronunciationMarks(text) {
+  return [...pronunciation.entries()].reduce((spoken, [plain, marked]) => spoken.replaceAll(plain, marked), text);
+}
 
 function playTone(type) {
   if (!soundOn) return;
@@ -113,7 +124,7 @@ function speakWithSystemVoice(text) {
     return;
   }
   window.speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(text);
+  const utterance = new SpeechSynthesisUtterance(addPronunciationMarks(text));
   utterance.lang = "he-IL";
   utterance.rate = 0.82;
   utterance.pitch = 1.05;
