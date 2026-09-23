@@ -20,7 +20,10 @@ const voiceFiles = {
   "שוטר": "assets/audio/shoter.wav",
   "מפה": "assets/audio/mapa.wav",
   "מפתח": "assets/audio/mafteach.wav",
-  "תיק": "assets/audio/tik.wav"
+  "תיק": "assets/audio/tik.wav",
+  "תג": "assets/audio/tag.wav",
+  "דלת": "assets/audio/delet.wav",
+  "אור": "assets/audio/or.wav"
 };
 const instructionFiles = {
   "איזו מילה מתאימה לתמונה? בחר את המילה שאתה רואה.": "assets/audio/instruction-read.wav",
@@ -188,7 +191,10 @@ const readRounds = [
   { word: "ניידת", image: "ניידת משטרה", imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Police%20car%20in%20New%20York%20City.jpg?width=900", choices: ["נדנדה", "ניידת", "נמלה"], hint: "המילה מתחילה בצליל נַי." },
   { word: "שוטר", image: "שוטר", imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Police%20officer.jpg?width=900", choices: ["שולחן", "שוטר", "שמש"], hint: "המילה מתחילה באות ש." },
   { word: "מפה", image: "מפת חקירה", imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Map.jpg?width=900", choices: ["מפה", "מיטה", "מגבת"], hint: "המילה מתחילה באות מ." },
-  { word: "מפתח", image: "מפתח", imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Key.jpg?width=900", choices: ["מפתח", "מטוס", "מחשב"], hint: "המילה מתחילה בצליל מַפ." }
+  { word: "מפתח", image: "מפתח", imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Key.jpg?width=900", choices: ["מפתח", "מטוס", "מחשב"], hint: "המילה מתחילה בצליל מַפ." },
+  { word: "תג", image: "תג משטרה", imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Police_badge.jpg?width=900", choices: ["תג", "גג", "דג"], hint: "המילה קצרה ומתחילה באות ת." },
+  { word: "דלת", image: "דלת", imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Door.jpg?width=900", choices: ["דלת", "דגל", "דלי"], hint: "המילה מתחילה באות ד." },
+  { word: "אור", image: "אור", imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Flashlight.jpg?width=900", choices: ["אור", "אריה", "אוזן"], hint: "המילה מתחילה באות א." }
 ];
 let readRound = 0;
 let readCompleted = false;
@@ -254,7 +260,10 @@ const writeRounds = [
   { word: "ניידת", missing: "י", parts: ["נ", "_", "ד", "ת"], imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Police%20car%20in%20New%20York%20City.jpg?width=500" },
   { word: "שוטר", missing: "ו", parts: ["ש", "_", "ט", "ר"], imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Police%20officer.jpg?width=500" },
   { word: "מפה", missing: "פ", parts: ["מ", "_", "ה"], imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Map.jpg?width=500" },
-  { word: "מפתח", missing: "פ", parts: ["מ", "_", "ת", "ח"], imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Key.jpg?width=500" }
+  { word: "מפתח", missing: "פ", parts: ["מ", "_", "ת", "ח"], imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Key.jpg?width=500" },
+  { word: "תג", missing: "ג", parts: ["ת", "_"], imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Police_badge.jpg?width=500" },
+  { word: "דלת", missing: "ל", parts: ["ד", "_", "ת"], imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Door.jpg?width=500" },
+  { word: "אור", missing: "ר", parts: ["א", "_"], imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Flashlight.jpg?width=500" }
 ];
 let writeRound = 0;
 function renderWriteRound() {
@@ -312,7 +321,10 @@ const soundRounds = [
   { word: "ניידת", answer: "נ", choices: ["נ", "ב", "ל"] },
   { word: "מפה", answer: "מ", choices: ["ס", "מ", "ש"] },
   { word: "מפתח", answer: "מ", choices: ["מ", "פ", "ש"] },
-  { word: "תיק", answer: "ת", choices: ["ת", "ט", "ק"] }
+  { word: "תיק", answer: "ת", choices: ["ת", "ט", "ק"] },
+  { word: "תג", answer: "ת", choices: ["ת", "ג", "ד"] },
+  { word: "דלת", answer: "ד", choices: ["ד", "ת", "ל"] },
+  { word: "אור", answer: "א", choices: ["א", "ו", "ר"] }
 ];
 let soundRound = 0;
 const soundChoices = document.getElementById("soundChoices");
