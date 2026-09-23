@@ -33,6 +33,9 @@
           <button class="nav-item" data-screen="write">
             <span class="nav-icon" aria-hidden="true">✎</span> חדר כתיבה
           </button>
+          <button class="nav-item" data-screen="sounds">
+            <span class="nav-icon" aria-hidden="true">♫</span> מעבדת צלילים
+          </button>
           <button class="nav-item" data-screen="reports">
             <span class="nav-icon" aria-hidden="true">▤</span> דוחות הצלחה
           </button>
@@ -69,12 +72,17 @@
 
         <section id="readScreen" class="screen hidden">
           <div class="practice-header"><button class="back-button" data-go="home">→ חזרה ללוח</button><span class="case-tag">משימה 1 מתוך 3</span><div class="practice-count">ניקוד: <strong id="readScore">0</strong></div></div>
-          <div class="practice-card"><div class="practice-intro"><span class="mission-icon blue" aria-hidden="true">א</span><div><p class="eyebrow">קוראים את הזירה</p><h2>איזו מילה מתאימה לתמונה?</h2><p>בחר את המילה שאתה רואה. אפשר גם ללחוץ על הרמקול.</p></div></div><div class="word-scene" id="wordScene"><div class="scene-illustration" aria-label="מכונית משטרה כחולה" role="img"><span class="light red"></span><span class="light blue-light"></span><span class="car-window"></span><span class="car-body">POLICE</span><span class="wheel left"></span><span class="wheel right"></span></div><button class="listen-button" id="listenButton">🔊 שמע את המילה</button></div><div class="choices" id="choices" role="group" aria-label="בחירת מילה"></div><div class="feedback" id="readFeedback" aria-live="polite"></div><button class="primary-button next-button hidden" id="nextRead">המשך לחקירה <span aria-hidden="true">←</span></button></div>
+          <div class="practice-card"><div class="practice-intro"><span class="mission-icon blue" aria-hidden="true">א</span><div><p class="eyebrow" id="readRoundLabel">קוראים את הזירה · סבב 1 מתוך 3</p><h2>איזו מילה מתאימה לתמונה?</h2><p>בחר את המילה שאתה רואה. אפשר גם ללחוץ על הרמקול.</p></div></div><div class="word-scene" id="wordScene"><div class="scene-illustration" aria-label="מכונית משטרה כחולה" role="img"><span class="light red"></span><span class="light blue-light"></span><span class="car-window"></span><span class="car-body">POLICE</span><span class="wheel left"></span><span class="wheel right"></span></div><button class="listen-button" id="listenButton">🔊 שמע את המילה</button></div><div class="practice-tools"><button class="hint-button" id="hintButton">💡 רמז</button><span id="hintText" class="hint-text" aria-live="polite"></span></div><div class="choices" id="choices" role="group" aria-label="בחירת מילה"></div><div class="feedback" id="readFeedback" aria-live="polite"></div><button class="primary-button next-button hidden" id="nextRead">המשך לחקירה <span aria-hidden="true">←</span></button></div>
         </section>
 
         <section id="writeScreen" class="screen hidden">
           <div class="practice-header"><button class="back-button" data-go="home">→ חזרה ללוח</button><span class="case-tag">חדר כתיבה</span><div class="practice-count">ניקוד: <strong id="writeScore">0</strong></div></div>
-          <div class="practice-card writing-card"><div class="practice-intro"><span class="mission-icon gold" aria-hidden="true">✎</span><div><p class="eyebrow">כותבים דו״ח</p><h2>השלימו את המילה</h2><p>כתבו את האות שחסרה במילה. אפשר להיעזר בתמונה.</p></div></div><div class="writing-prompt"><div class="prompt-image" aria-hidden="true">🚓</div><div class="missing-word"><span>מ</span><span class="blank" id="blank">_</span><span>ש</span><span>ט</span><span>ר</span><span>ה</span></div><p>מילה: <strong>משטרה</strong></p></div><label for="letterInput">האות החסרה</label><div class="letter-row"><input id="letterInput" maxlength="1" autocomplete="off" inputmode="text" aria-describedby="writeFeedback" /><button class="primary-button" id="checkLetter">בדיקה</button></div><div class="feedback" id="writeFeedback" aria-live="polite"></div></div>
+          <div class="practice-card writing-card"><div class="practice-intro"><span class="mission-icon gold" aria-hidden="true">✎</span><div><p class="eyebrow">כותבים דו״ח</p><h2>השלימו את המילה</h2><p>כתבו את האות שחסרה במילה. אפשר להיעזר בתמונה.</p></div></div><div class="writing-prompt"><div class="prompt-image" aria-hidden="true">🚓</div><div class="missing-word"><span>מ</span><span class="blank" id="blank">_</span><span>ט</span><span>ר</span><span>ה</span></div><p>מילה: <strong>משטרה</strong></p></div><label for="letterInput">האות החסרה</label><div class="letter-row"><input id="letterInput" maxlength="1" autocomplete="off" inputmode="text" aria-describedby="writeFeedback" /><button class="primary-button" id="checkLetter">בדיקה</button></div><div class="feedback" id="writeFeedback" aria-live="polite"></div></div>
+        </section>
+
+        <section id="soundsScreen" class="screen hidden">
+          <div class="practice-header"><button class="back-button" data-go="home">→ חזרה ללוח</button><span class="case-tag">אימון שמיעה</span><div class="practice-count">סבב קצר · 2 דקות</div></div>
+          <div class="practice-card sound-card"><div class="practice-intro"><span class="mission-icon blue" aria-hidden="true">♫</span><div><p class="eyebrow">מעבדת צלילים</p><h2>איזה צליל פותח את המילה?</h2><p>שמעו את המילה, ואז בחרו את האות הראשונה.</p></div></div><div class="sound-word"><strong id="soundWord">שוטר</strong><button class="listen-button" id="soundWordButton">🔊 שמע שוב</button></div><div class="sound-choices" id="soundChoices" role="group" aria-label="בחירת צליל"></div><div class="feedback" id="soundFeedback" aria-live="polite"></div></div>
         </section>
 
         <section id="reportsScreen" class="screen hidden">
