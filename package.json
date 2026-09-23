@@ -1,0 +1,23 @@
+{
+  "name": "police-reader",
+  "version": "0.1.0",
+  "description": "תחנת למידה משחקית לקריאה וכתיבה",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "package:win": "electron-builder --win portable"
+  },
+  "devDependencies": {
+    "electron": "^32.1.2",
+    "electron-builder": "^25.0.5"
+  },
+  "build": {
+    "appId": "il.police.reader",
+    "productName": "תחנת קריאה משטרתית",
+    "files": ["main.js", "index.html", "styles.css", "app.js"],
+    "win": {
+      "target": "portable",
+      "icon": "assets/icon.ico"
+    }
+  }
+}

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>תחנת קריאה משטרתית</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">דלג לתוכן הראשי</a>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="ניווט ראשי">
+        <div class="brand">
+          <div class="badge-mark" aria-hidden="true"><span>★</span></div>
+          <div>
+            <strong>תחנת קריאה</strong>
+            <small>יחידת ההצלחה</small>
+          </div>
+        </div>
+        <div class="officer-card">
+          <div class="avatar" aria-hidden="true">א</div>
+          <div><strong>החוקר אורי</strong><small>דרגת מתלמד</small></div>
+          <span class="online-dot" aria-label="מחובר"></span>
+        </div>
+        <nav>
+          <p class="nav-label">מרכז שליטה</p>
+          <button class="nav-item active" data-screen="home" aria-current="page">
+            <span class="nav-icon" aria-hidden="true">⌂</span> משימות היום
+          </button>
+          <button class="nav-item" data-screen="read">
+            <span class="nav-icon" aria-hidden="true">א</span> אימון קריאה
+          </button>
+          <button class="nav-item" data-screen="write">
+            <span class="nav-icon" aria-hidden="true">✎</span> חדר כתיבה
+          </button>
+          <button class="nav-item" data-screen="reports">
+            <span class="nav-icon" aria-hidden="true">▤</span> דוחות הצלחה
+          </button>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="streak"><span aria-hidden="true">⚡</span><div><strong id="streak">3 ימים</strong><small>רצף חקירה</small></div></div>
+          <button class="help-button" id="helpButton"><span aria-hidden="true">?</span> צריך עזרה?</button>
+        </div>
+      </aside>
+
+      <main id="main" class="main-content">
+        <header class="topbar">
+          <div><p class="eyebrow">יום רביעי · 23 בספטמבר</p><h1 id="pageTitle">משימות היום</h1></div>
+          <div class="top-actions">
+            <button class="icon-button" id="soundButton" aria-label="הפעל או השתקת צלילים" aria-pressed="false">◖</button>
+            <div class="level-chip"><span class="mini-star" aria-hidden="true">★</span><span><b id="points">120</b> נקודות</span></div>
+          </div>
+        </header>
+
+        <section id="homeScreen" class="screen">
+          <section class="welcome-banner">
+            <div class="welcome-copy"><span class="case-tag">תיק מס׳ 0042 · פתוח</span><h2>בוקר טוב, אורי.<br /><em>המשימה שלך מחכה.</em></h2><p>שלוש משימות קצרות יעזרו לך להתקדם היום.</p><button class="primary-button" data-go="read">פתיחת המשימה הראשונה <span aria-hidden="true">←</span></button></div>
+            <div class="radar" aria-hidden="true"><div class="radar-ring ring-1"></div><div class="radar-ring ring-2"></div><div class="radar-line"></div><div class="radar-dot dot-1"></div><div class="radar-dot dot-2"></div><div class="radar-center">★</div></div>
+          </section>
+
+          <div class="section-heading"><div><p class="eyebrow">לוח המשימות</p><h2>מה חוקרים היום?</h2></div><span class="progress-note">1 מתוך 3 הושלמו</span></div>
+          <section class="mission-grid" aria-label="משימות לימוד">
+            <article class="mission-card featured"><div class="mission-top"><span class="mission-icon blue" aria-hidden="true">א</span><span class="status-badge">המשימה הבאה</span></div><h3>קוראים את הזירה</h3><p>מזהים מילים קצרות ומחברים אותן לתמונה.</p><div class="mission-bottom"><span>⏱ 5 דקות</span><button class="text-button" data-go="read">כניסה <span aria-hidden="true">←</span></button></div></article>
+            <article class="mission-card"><div class="mission-top"><span class="mission-icon gold" aria-hidden="true">✎</span><span class="done-badge">✓ הושלם</span></div><h3>כותבים דו״ח</h3><p>מתרגלים כתיבה של מילים שימושיות.</p><div class="mission-bottom"><span>⏱ 7 דקות</span><button class="text-button" data-go="write">לתרגל שוב <span aria-hidden="true">←</span></button></div></article>
+            <article class="mission-card locked"><div class="mission-top"><span class="mission-icon gray" aria-hidden="true">▤</span><span class="locked-badge">נפתח בקרוב</span></div><h3>דוח הבלש</h3><p>מספרים מה גילינו במשימה.</p><div class="mission-bottom"><span>השלימו עוד משימה</span><span class="lock-icon" aria-hidden="true">⌑</span></div></article>
+          </section>
+          <section class="progress-panel"><div class="progress-copy"><div class="progress-icon" aria-hidden="true">★</div><div><p class="eyebrow">התקדמות בדרגה</p><h3>בלש מתחיל <span>דרגה 2</span></h3><p>עוד 30 נקודות עד לדרגה הבאה.</p></div></div><div class="progress-track"><div class="progress-fill"></div></div><span class="progress-value">70%</span></section>
+        </section>
+
+        <section id="readScreen" class="screen hidden">
+          <div class="practice-header"><button class="back-button" data-go="home">→ חזרה ללוח</button><span class="case-tag">משימה 1 מתוך 3</span><div class="practice-count">ניקוד: <strong id="readScore">0</strong></div></div>
+          <div class="practice-card"><div class="practice-intro"><span class="mission-icon blue" aria-hidden="true">א</span><div><p class="eyebrow">קוראים את הזירה</p><h2>איזו מילה מתאימה לתמונה?</h2><p>בחר את המילה שאתה רואה. אפשר גם ללחוץ על הרמקול.</p></div></div><div class="word-scene" id="wordScene"><div class="scene-illustration" aria-label="מכונית משטרה כחולה" role="img"><span class="light red"></span><span class="light blue-light"></span><span class="car-window"></span><span class="car-body">POLICE</span><span class="wheel left"></span><span class="wheel right"></span></div><button class="listen-button" id="listenButton">🔊 שמע את המילה</button></div><div class="choices" id="choices" role="group" aria-label="בחירת מילה"></div><div class="feedback" id="readFeedback" aria-live="polite"></div><button class="primary-button next-button hidden" id="nextRead">המשך לחקירה <span aria-hidden="true">←</span></button></div>
+        </section>
+
+        <section id="writeScreen" class="screen hidden">
+          <div class="practice-header"><button class="back-button" data-go="home">→ חזרה ללוח</button><span class="case-tag">חדר כתיבה</span><div class="practice-count">ניקוד: <strong id="writeScore">0</strong></div></div>
+          <div class="practice-card writing-card"><div class="practice-intro"><span class="mission-icon gold" aria-hidden="true">✎</span><div><p class="eyebrow">כותבים דו״ח</p><h2>השלימו את המילה</h2><p>כתבו את האות שחסרה במילה. אפשר להיעזר בתמונה.</p></div></div><div class="writing-prompt"><div class="prompt-image" aria-hidden="true">🚓</div><div class="missing-word"><span>מ</span><span class="blank" id="blank">_</span><span>ש</span><span>ט</span><span>ר</span><span>ה</span></div><p>מילה: <strong>משטרה</strong></p></div><label for="letterInput">האות החסרה</label><div class="letter-row"><input id="letterInput" maxlength="1" autocomplete="off" inputmode="text" aria-describedby="writeFeedback" /><button class="primary-button" id="checkLetter">בדיקה</button></div><div class="feedback" id="writeFeedback" aria-live="polite"></div></div>
+        </section>
+
+        <section id="reportsScreen" class="screen hidden">
+          <div class="reports-hero"><div><p class="eyebrow">דוחות הצלחה</p><h2>כל הכבוד, אורי.</h2><p>כל תרגול קטן הוא צעד גדול קדימה.</p></div><div class="big-medal" aria-hidden="true">★</div></div>
+          <div class="report-stats"><div><strong id="reportPoints">120</strong><span>נקודות שנצברו</span></div><div><strong>6</strong><span>מילים שנלמדו</span></div><div><strong>3</strong><span>ימים ברצף</span></div></div>
+          <div class="report-list"><div class="section-heading"><div><p class="eyebrow">יומן משימות</p><h2>ההצלחות האחרונות</h2></div></div><div class="report-row"><span class="report-check">✓</span><div><strong>כותבים דו״ח</strong><small>הושלם היום · 40 נקודות</small></div><span class="report-date">היום</span></div><div class="report-row"><span class="report-check">✓</span><div><strong>אותיות ראשונות</strong><small>הושלם אתמול · 30 נקודות</small></div><span class="report-date">אתמול</span></div></div>
+        </section>
+      </main>
+    </div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="app.js"></script>
+  </body>
+</html>
